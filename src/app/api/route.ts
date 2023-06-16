@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-const get_movie_details = async (name: string) => {
-  console.log("Calling MovieDB");
-  const movieDBUrl = `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${name}`;
-  const movieDBRes = await fetch(movieDBUrl);
-  const movieDBData = await movieDBRes.json();
-
-  return movieDBData;
+const get_book_details = async (name: string) => {
+  console.log("Calling bookDB");
+  const bookDBUrl = `https://www.googleapis.com/books/v1/volumes?q=${name}`;
+  const bookDBRes = await fetch(bookDBUrl);
+  const bookDBData = await bookDBRes.json();
+  
+  return bookDBData;
 };
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
   // Step 1, send model the user query and what functions it has access to
   const initialBody = {
-    model: "gpt-3.5-turbo-0613",
+    model: "gpt-3.5-turbo-16k",
     messages: [
       {
         role: "user",
@@ -23,15 +23,15 @@ export async function POST(request: Request) {
     ],
     functions: [
       {
-        name: "get_movie_details",
+        name: "get_book_details",
         description:
-          "Get various details about a movie, like ratings, release date, genre etc.",
+          "Get various details about a book, like ratings, release date, genre etc.",
         parameters: {
           type: "object",
           properties: {
             name: {
               type: "string",
-              description: "The name of the movie to get the details for",
+              description: "The name of the book to get the details for",
             },
           },
           required: ["name"],
@@ -55,22 +55,22 @@ export async function POST(request: Request) {
   );
 
   const data = await initialResponse.json();
-
+ 
   const message = data?.choices[0]?.message;
-
+  
   // Step 2, check if the model wants to call a function
   if (message.function_call) {
     console.log("Model wants to call a function");
     const functionName = message.function_call?.name;
     const functionArgName = JSON.parse(message.function_call?.arguments)?.name;
 
-    // Step 3, call the function / movieDB API
-    const movieDBData = await get_movie_details(functionArgName);
+    // Step 3, call the function / bookDB API
+    const bookDBData = await get_book_details(functionArgName);
 
     // Step 4, send model the info on the function call and function response
-    console.log("Making final call to GPT with the movie data");
+    console.log("Making final call to GPT with the book data");
     const finalBody = {
-      model: "gpt-3.5-turbo-0613",
+      model: "gpt-3.5-turbo-16k",
       messages: [
         {
           role: "user",
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
         {
           role: "function",
           name: functionName,
-          content: JSON.stringify(movieDBData),
+          content: JSON.stringify(bookDBData),
         },
       ],
     };
