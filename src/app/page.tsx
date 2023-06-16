@@ -11,7 +11,7 @@ export default function Home() {
   const prompt = async () => {
     const prompt = promptInput.current?.value;
     setLoading(true);
-    const res = await fetch("/api/", {
+    const res = await fetch("/api/response", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
