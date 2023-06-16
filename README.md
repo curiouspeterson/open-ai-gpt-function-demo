@@ -6,7 +6,6 @@ Copy `.env.template` to `.env.development.local` and fill in the API keys.
 
 Get `OPENAI_API_KEY` from https://platform.openai.com/account/api-keys
 
-Get `OMDB_API_KEY` from https://www.omdbapi.com/apikey.aspx
 
 ## Getting Started
 

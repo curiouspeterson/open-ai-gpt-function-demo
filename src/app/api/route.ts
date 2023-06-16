@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
   // Step 1, send model the user query and what functions it has access to
   const initialBody = {
-    model: "gpt-3.5-turbo-16k",
+    model: "gpt-3.5-turbo-0613",
     messages: [
       {
         role: "user",
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       {
         name: "get_book_details",
         description:
-          "Get various details about a book, like ratings, release date, genre etc.",
+          "Get various details about a book, like ratings, release date, genre, characters, publisher, summary etc.",
         parameters: {
           type: "object",
           properties: {
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     // Step 4, send model the info on the function call and function response
     console.log("Making final call to GPT with the book data");
     const finalBody = {
-      model: "gpt-3.5-turbo-16k",
+      model: "gpt-3.5-turbo-16k-0613",
       messages: [
         {
           role: "user",
