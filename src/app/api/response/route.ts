@@ -54,9 +54,10 @@ export async function POST(request: Request) {
     }
   );
 
-  const data = await initialResponse.json();
+  const data = await initialResponse.json(); 
  
   const message = data?.choices[0]?.message;
+  console.log("message: " +message)
   
   // Step 2, check if the model wants to call a function
   if (message.function_call) {
